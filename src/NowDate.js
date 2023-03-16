@@ -7,7 +7,7 @@ function NowDate() {
 
   return(
     <>
-    <div className="text-center mb-4">
+    <div className="text-center text-[#F8F9D7]">
       <Date format={'YYYY년 MM월 DD일 '} ticking={false} timezone={"Asia/Seoul"} /> 
       <DaysOfTheWeek 
         format={

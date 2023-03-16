@@ -24,7 +24,6 @@ function App() {
   const [tasks, setTasks] = useState(initialTasks);
   const [filter, setFilter] = useState('전체');
   const [isEditing, setIsEditing] = useState(false); // 수정중 filterbutton 비활성화용
-  
 
   // tasks 추적하기
   console.log(tasks);
@@ -41,6 +40,7 @@ function App() {
     console.log(updatedTasks);
     setTasks(updatedTasks);
     setIsEditing(false); // 마지막 tasks를 delete후에 add하는 경우를 대비
+    
   }
 
   // task를 삭제하는 함수
@@ -100,23 +100,27 @@ function App() {
   ));
 
   return (
-    <div className="max-w-sm mx-auto mt-4 border rounded-2xl p-4">
-      <h1 
-        className="text-2xl text-center font-bold mb-4" 
-      >
-        To Do List
-      </h1>
-      <NowDate />
-
-      <Form addTask={addTask} />
-
-      <div className="flex flex-nowrap gap-1 mb-4">
-        {filterButtons}
+    <div className="max-w-sm h-auto duration-300 mx-auto mt-4 border-4 border-double rounded-2xl shadow-xl" id="mainContainer">
+      <div className="p-4 rounded-t-2xl">
+        <h1 
+          className="text-2xl text-white text-center font-bold my-4" id="mainTitle" 
+        >
+          To Do List
+        </h1>
+        <NowDate />
       </div>
 
-      <ul className="">
-        {taskList}
-      </ul>
+      <div className="p-4">
+        <Form addTask={addTask} />
+
+        <div className="flex flex-nowrap gap-1 mb-4">
+          {filterButtons}
+        </div>
+
+        <ul className="">
+          {taskList}
+        </ul>
+      </div>
     </div>
   );
 }
@@ -141,7 +145,7 @@ const Form = memo(function Form(props) {
     >
       <input
         type="text"
-        className="border px-2 py-1 w-full mb-2 focus:outline-none focus:ring focus:ring-indigo-300"
+        className="border px-2 py-1 w-full mb-2 focus:outline-none focus:ring focus:ring-[#B2C8DF]"
         value={name}
         onChange={(e) => setName(e.target.value)}
         autoComplete="off"
@@ -149,7 +153,7 @@ const Form = memo(function Form(props) {
       />
       <button
         type="submit"
-        className="p-1 w-full border disabled:opacity-50 text-indigo-500"
+        className="p-1 w-full border text-[#6E85B7] font-bold bg-[#F8F9D7] hover:scale-[102%] duration-300  disabled:opacity-50"
         disabled={!name.trim()}
       >
         추가하기
@@ -164,7 +168,7 @@ const FilterButton = memo(function FilterButton(props) {
 
   return(
     <button
-      className={"p-1 mx-2 w-1/3 border hover:scale-110 hover:ring hover:ring-indigo-300 duration-300 " + (props.isPressed && "outline outline-indigo-300 font-bold")} // filter === name가 true면 뒤 실행
+      className={"p-1 mx-2 w-1/3 border bg-[#F8F9D7] text-[#6E85B7] hover:scale-110 hover:ring hover:ring-[#B2C8DF] duration-300 " + (props.isPressed && "outline outline-[#B2C8DF] font-bold")} // filter === name가 true면 뒤 실행
       onClick={() => props.setFilter(props.name)}
       disabled={props.isEditing}
     >
@@ -201,16 +205,18 @@ const Todo = memo(function Todo(props) {
     setNewName("");
   };
 
+  // 포커스 dom 조작
+  useEffect(() => { // 비동기 (버츄얼돔때문)
+    if (!wasEditing && isEditing) { // 이전에 수정한값이 없고 현재 수정중이면
+      inputEl.current.focus();
+    }
+    if (wasEditing && !isEditing) { // 이전에 수정한값이 있고 현재 수정중이 아니면
+      buttonEl.current.focus();
+    }
+  }, [wasEditing, isEditing]);
 
-useEffect(() => { // 비동기 (버츄얼돔때문)
-  if (!wasEditing && isEditing) { // 이전에 수정한값이 없고 현재 수정중이면
-    inputEl.current.focus();
-  }
-  if (wasEditing && !isEditing) { // 이전에 수정한값이 있고 현재 수정중이 아니면
-    buttonEl.current.focus();
-  }
-}, [wasEditing, isEditing]);
 
+  // 기본 모드
   const viewTemplate = (
     <>
       <div className="flex mb-2">
@@ -221,10 +227,10 @@ useEffect(() => { // 비동기 (버츄얼돔때문)
             checked={props.completed}
             onChange={() => props.toggleTaskCompleted(props.id)} // checkbox에서 onChange는 check
           />
-          <div className="relative inline-block h-[16px] w-[16px] mr-2 outline outline-gray-300 rounded-full bg-white peer-checked:bg-indigo-300 duration-500">
-            {props.completed && <div className="absolute left-[4px] top-[4px] h-[8px] w-[8px] rounded-full bg-white duration-500"></div>}
+          <div className="relative inline-block h-[16px] w-[16px] mr-2 outline outline-gray-300 rounded-sm bg-white peer-checked:bg-[#B2C8DF] duration-500">
+            {props.completed && <div className="absolute w-[14px] h-[10px] left-[1px] top-[1px] border-t-4 border-r-4 rotate-[130deg] duration-500"></div>}
           </div>
-          <span className="font-medium peer-checked:line-through peer-checked:text-gray-400 duration-500">
+          <span className="font-medium text-[#F8F9D7] peer-checked:line-through peer-checked:text-gray-400 duration-500">
             {props.name}
           </span>
         </label>
@@ -232,14 +238,14 @@ useEffect(() => { // 비동기 (버츄얼돔때문)
       <div className="absolute top-2 right-0 h-6 flex flex-nowrap gap-1 text-xs">
         <button
           type="button"
-          className="h-full p-1 border hover:scale-110 duration-500"
+          className="h-full p-1 border rounded-lg text-[#6E85B7] font-semibold hover:scale-110 duration-500 bg-[#B2C8DF]"
           onClick={() => {setIsEditing(true); props.setIsEditing(true);}}
           ref={buttonEl}
         >
           수정
         </button>
         <button
-          className="h-full p-1 border text-red-500 hover:scale-110 duration-300"
+          className="h-full p-1 border rounded-lg text-[#6E85B7] font-semibold hover:scale-110 duration-300 bg-[#B2C8DF]"
           onClick={() => props.deleteTask(props.id)}
         >
           삭제
@@ -249,28 +255,29 @@ useEffect(() => { // 비동기 (버츄얼돔때문)
   );
 
 
+  // 수정 모드
   const editingTemplate = (
     <form onSubmit={handleSubmit}>
       <input 
         type="text"
-        className="border px-2 py-1 w-full mb-2 focus:outline-none focus:ring focus:ring-indigo-300 text-xs"
+        className="border px-2 py-1 w-full mb-2 focus:outline-none focus:ring focus:ring-[#B2C8DF] text-xs"
         value={newName}
         onChange={(e) => setNewName(e.target.value)}
         ref={inputEl}
-        placeholder={`새 목표를 입력해주세요.  이전 목표: ${props.name}`}
+        placeholder={`이전 목표: ${props.name}`}
       />
       <div>
         <div className="flex h-6 flex-nowrap gap-1 text-xs">
           <button
             type="button"
-            className="w-1/2 h-full p-1 border"
+            className="w-1/2 h-full p-1 border bg-[#F8F9D7] text-[#6E85B7] font-semibold hover:opacity-50 duration-300"
             onClick={() => {setIsEditing(false); props.setIsEditing(false);}}
           >
             취소
           </button>
           <button
             type="submit"
-            className="w-1/2 h-full p-1 border disabled:opacity-50 text-indigo-300"
+            className="w-1/2 h-full p-1 border disabled:opacity-50 bg-[#F8F9D7] text-[#6E85B7] font-semibold hover:opacity-50 duration-300"
             disabled={!newName.trim()}
           >
             저장
@@ -280,9 +287,10 @@ useEffect(() => { // 비동기 (버츄얼돔때문)
     </form>
   );
 
+
   return (
-    <li className="relative mb-4 p-2 border-b-2 border-b-indigo-300">
-       {isEditing ? editingTemplate : viewTemplate}
+    <li className="relative mb-4 p-2 border-b-2 border-b-[#C4D7E0] " id="taskLi">
+      {isEditing ? editingTemplate : viewTemplate}
     </li>
   )
 })
