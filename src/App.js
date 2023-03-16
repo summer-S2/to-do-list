@@ -227,7 +227,7 @@ const Todo = memo(function Todo(props) {
             checked={props.completed}
             onChange={() => props.toggleTaskCompleted(props.id)} // checkbox에서 onChange는 check
           />
-          <div className="relative inline-block h-[16px] w-[16px] mr-2 outline outline-gray-300 rounded-sm bg-white peer-checked:bg-[#B2C8DF] duration-500">
+          <div className="relative inline-block h-[16px] w-[16px] mr-2 outline outline-gray-300 rounded-md bg-white peer-checked:bg-[#B2C8DF] duration-500">
             {props.completed && <div className="absolute w-[14px] h-[10px] left-[1px] top-[1px] border-t-4 border-r-4 rotate-[130deg] duration-500"></div>}
           </div>
           <span className="font-medium text-[#F8F9D7] peer-checked:line-through peer-checked:text-gray-400 duration-500">
