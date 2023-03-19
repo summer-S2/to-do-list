@@ -1,12 +1,13 @@
-import React, { useEffect, useState, useRef, memo } from "react";
-import NowDate from './NowDate'
+import React, { useEffect, useState, useRef, memo, } from "react";
+import NowDate from './NowDate';
+import { CSSTransition, TransitionGroup, } from "react-transition-group";
 import './App.css';
 
 // 초기 데이터
 const initialTasks = [
-  {id: "todo-0", name: "목록 1", completed: true},
-  {id: "todo-1", name: "목록 2", completed: false},
-  {id: "todo-2", name: "목록 3", completed: false},
+  {id: "todo-0", name: "목록 1", completed: true,},
+  {id: "todo-1", name: "목록 2", completed: false,},
+  {id: "todo-2", name: "목록 3", completed: false,},
 ];
 
 
@@ -87,20 +88,20 @@ function App() {
 
   // 할 일 목록을 담은 변수
   const taskList = tasks.filter(FILTER_MAP[filter]).map(task => (
-    <Todo
-      key={task.id}
-      id={task.id}
-      name={task.name}
-      completed={task.completed}
-      deleteTask={deleteTask}
-      toggleTaskCompleted={toggleTaskCompleted}
-      editTask={editTask}
-      setIsEditing={setIsEditing}
-    />
+      <Todo
+        key={task.id}
+        id={task.id}
+        name={task.name}
+        completed={task.completed}
+        deleteTask={deleteTask}
+        toggleTaskCompleted={toggleTaskCompleted}
+        editTask={editTask}
+        setIsEditing={setIsEditing}
+      />
   ));
 
   return (
-    <div className="max-w-sm h-auto duration-300 mx-auto mt-4 border-4 border-double rounded-2xl shadow-xl" id="mainContainer">
+    <div className="max-w-sm h-auto duration-300 mx-auto mt-4 border-4 border-double rounded-2xl shadow-xl duration-300" id="mainContainer">
       <div className="p-4 rounded-t-2xl">
         <h1 
           className="text-2xl text-white text-center font-bold my-4" id="mainTitle" 
@@ -117,9 +118,11 @@ function App() {
           {filterButtons}
         </div>
 
+        
         <ul className="">
           {taskList}
         </ul>
+      
       </div>
     </div>
   );
