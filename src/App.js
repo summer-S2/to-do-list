@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef, memo, } from "react";
 import NowDate from './NowDate';
-import { CSSTransition, TransitionGroup, } from "react-transition-group";
 import './App.css';
 
 // 초기 데이터
