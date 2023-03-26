@@ -1,9 +1,7 @@
-import React, { useState, } from "react";
-
 
 function NowDate() {
 
-  const [today, setToday] = useState(new Date());
+  const today = new Date();
 
   // console.log(today);
 

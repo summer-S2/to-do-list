@@ -1,7 +1,4 @@
 
-import { useState } from "react";
-
-
 function Rate({ tasks, completedCount }) {
 
   const rate = Math.round(completedCount.length / tasks.length * 100);

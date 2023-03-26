@@ -138,12 +138,14 @@ function App() {
 // task를 추가하는 form
 const Form = memo(function Form(props) {
   const [name, setName] = useState("");
+  const inputEl = useRef(null);
 
   // form의 추가하기를 눌렀을 때
   function handleSubmit(e) {
     e.preventDefault();
     props.addTask(name);
     setName("");
+    inputEl.current.focus();
   }
 
   return(
@@ -157,6 +159,7 @@ const Form = memo(function Form(props) {
         value={name}
         onChange={(e) => setName(e.target.value)}
         autoComplete="off"
+        ref={inputEl}
         placeholder="새로 입력하기"
       />
       <button
@@ -226,11 +229,9 @@ const Todo = memo(function Todo(props) {
   function handleClick () {
     setCollapsed(true);
 
-    let timer = setTimeout(() => {
+    setTimeout(() => {
       props.deleteTask(props.id)
     }, 1000);
-
-    // clearTimeout(timer);
   }
 
   // 포커스 dom 조작
