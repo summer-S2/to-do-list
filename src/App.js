@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef, memo, } from "react";
-import NowDate from './NowDate';
+import NowDate from './components/NowDate';
+import Rate from './components/Rate';
 import './App.css';
 
 // 초기 데이터
@@ -24,7 +25,6 @@ function App() {
   const [tasks, setTasks] = useState(initialTasks);
   const [filter, setFilter] = useState('전체');
   const [isEditing, setIsEditing] = useState(false); // 수정중 filterbutton 비활성화용
-
   // tasks 추적하기
   console.log(tasks);
 
@@ -99,6 +99,10 @@ function App() {
       />
   ));
 
+  // 완료된 항목의 갯수
+  const completedCount = tasks.filter(task => task.completed === true);
+  // console.log(completedCount.length);
+
   return (
     <div className="max-w-sm h-auto duration-300 mx-auto mt-4 border-4 border-double rounded-2xl shadow-xl duration-300" id="mainContainer">
       <div className="p-4 rounded-t-2xl">
@@ -109,6 +113,8 @@ function App() {
         </h1>
         <NowDate />
       </div>
+
+      <Rate key={completedCount} tasks={tasks} completedCount={completedCount} />
 
       <div className="p-4">
         <Form addTask={addTask} />
@@ -197,6 +203,16 @@ const Todo = memo(function Todo(props) {
   const buttonEl = useRef(null);
   const wasEditing = usePrevious(isEditing); // isEditing의 이전값 추적
   // console.log(wasEditing); 
+  const [collapsed, setCollapsed] = useState(false);
+
+  const deleteStyle = {
+    // task 삭제했을때 width 애니메이션
+    // height: collapsed ? '0' : '50px',
+    width: collapsed ? '0' : '336px',
+    overflow: 'hidden',
+    transition: '1s',
+    whiteSpace: collapsed ? 'nowrap' : 'normal',
+  }
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -206,6 +222,16 @@ const Todo = memo(function Todo(props) {
     // input을 비운다
     setNewName("");
   };
+
+  function handleClick () {
+    setCollapsed(true);
+
+    let timer = setTimeout(() => {
+      props.deleteTask(props.id)
+    }, 1000);
+
+    // clearTimeout(timer);
+  }
 
   // 포커스 dom 조작
   useEffect(() => { // 비동기 (버츄얼돔때문)
@@ -221,7 +247,7 @@ const Todo = memo(function Todo(props) {
   // 기본 모드
   const viewTemplate = (
     <>
-      <div className="flex mb-2">
+      <div className="flex mb-2 p-2">
         <label className="cursor-pointer flex items-center">
           <input
             type="checkbox"
@@ -248,7 +274,7 @@ const Todo = memo(function Todo(props) {
         </button>
         <button
           className="h-full p-1 border rounded-lg text-[#6E85B7] font-semibold hover:scale-110 duration-300 bg-[#B2C8DF]"
-          onClick={() => props.deleteTask(props.id)}
+          onClick={handleClick}
         >
           삭제
         </button>
@@ -291,10 +317,15 @@ const Todo = memo(function Todo(props) {
 
 
   return (
-    <li className="relative mb-4 p-2 border-b-2 border-b-[#C4D7E0] " id="taskLi">
+    <li 
+      className="relative mb-4 border-b-2 border-b-[#C4D7E0]" 
+      id="taskLi"
+      style={deleteStyle}
+    >
       {isEditing ? editingTemplate : viewTemplate}
     </li>
   )
 })
+
 
 export default App;
